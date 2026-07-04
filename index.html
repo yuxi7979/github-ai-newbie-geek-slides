@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="product"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub 101 for Humanities Beginners</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&amp;f[]=satoshi@400,500,700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+
+<style>
+/* =====================================================================
+   html-slides — shared deck engine + theme tokens
+   ---------------------------------------------------------------------
+   One engine, three themes. Set the theme on <html data-theme="...">:
+     product   -> colorful, motion-driven (product / tech launch)
+     solution  -> clean, professional (customer solution & architecture)
+     report    -> editorial, data-forward (report / insights / playbook)
+   Decks are self-contained: copy this file's contents inline into the deck,
+   or link it. Fonts/icons load from CDN.
+   ===================================================================== */
+
+/* ---------- THEME TOKENS ------------------------------------------- */
+:root {
+  /* sizing scale shared by all themes */
+  --title-size: clamp(2.2rem, 6vw, 5rem);
+  --h2-size: clamp(1.5rem, 3.8vw, 2.6rem);
+  --h3-size: clamp(1rem, 1.8vw, 1.3rem);
+  --body-size: clamp(0.95rem, 1.25vw, 1.1rem);
+  --small-size: clamp(0.72rem, 0.95vw, 0.85rem);
+  --slide-pad: clamp(1.5rem, 5vw, 5.5rem);
+  --gap: clamp(0.75rem, 1.8vw, 1.75rem);
+  --radius: 18px;
+  --radius-sm: 10px;
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 0.7s;
+}
+
+/* PRODUCT — colorful, motion-driven (Mahadeva-inspired) */
+[data-theme="product"] {
+  --bg: #0a0a14;
+  --bg-soft: #12122a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.28);
+  --text: #f4f3ff;
+  --text-muted: #a3a0c8;
+  --accent: #7c3aed;
+  --accent-2: #ec4899;
+  --accent-3: #22d3ee;
+  --accent-4: #f59e0b;
+  --grad: linear-gradient(120deg, #7c3aed, #ec4899 45%, #f59e0b);
+  --font-display: "Clash Display", "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Satoshi", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* SOLUTION — clean, professional, diagram-friendly */
+[data-theme="solution"] {
+  --bg: #f6f8fc;
+  --bg-soft: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #eef2fb;
+  --border: #dde3ef;
+  --border-strong: #b9c3d8;
+  --text: #131a2b;
+  --text-muted: #5a6680;
+  --accent: #2563eb;
+  --accent-2: #0ea5e9;
+  --accent-3: #10b981;
+  --accent-4: #f97316;
+  --grad: linear-gradient(120deg, #2563eb, #0ea5e9);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* REPORT — editorial, data-forward (AI-in-Design-Report-inspired) */
+[data-theme="report"] {
+  --bg: #f4f1ea;
+  --bg-soft: #fbfaf6;
+  --surface: #ffffff;
+  --surface-strong: #efe9dd;
+  --border: #ddd5c6;
+  --border-strong: #b8ab92;
+  --text: #1c1a17;
+  --text-muted: #6c6457;
+  --accent: #b1452e;
+  --accent-2: #1c1a17;
+  --accent-3: #3f7d6e;
+  --accent-4: #c98a2b;
+  --grad: linear-gradient(120deg, #b1452e, #c98a2b);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ---------- RESET -------------------------------------------------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--body-size);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+/* ---------- SLIDE ENGINE ------------------------------------------- */
+.deck { width: 100%; }
+.slide {
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding: var(--slide-pad);
+  overflow: hidden;
+}
+.slide__inner { width: 100%; max-width: var(--maxw); margin: 0 auto; }
+.slide--center { align-items: center; text-align: center; }
+.slide--alt { background: var(--bg-soft); }
+
+/* ---------- TYPOGRAPHY --------------------------------------------- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+h2, .h2 {
+  font-family: var(--font-display);
+  font-size: var(--h2-size);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--gap);
+}
+h3, .h3 {
+  font-family: var(--font-display);
+  font-size: var(--h3-size);
+  font-weight: 600;
+}
+.lead { font-size: clamp(1.05rem, 1.6vw, 1.4rem); color: var(--text-muted); max-width: 60ch; }
+.muted { color: var(--text-muted); }
+.gradient-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- LAYOUT HELPERS ----------------------------------------- */
+.grid { display: grid; gap: var(--gap); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.split { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+.row { display: flex; flex-wrap: wrap; gap: var(--gap); }
+.mt { margin-top: var(--gap); }
+.mt-lg { margin-top: calc(var(--gap) * 2); }
+
+/* ---------- COMPONENTS --------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1.1rem, 2vw, 1.75rem);
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.card:hover { transform: translateY(-4px); border-color: var(--border-strong); }
+.card__num {
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: var(--small-size);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.metric { display: flex; flex-direction: column; gap: 0.25rem; }
+.metric__value { font-family: var(--font-display); font-size: clamp(2rem, 4.5vw, 3.6rem); font-weight: 600; line-height: 1; }
+.metric__label { font-size: var(--small-size); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.bar { height: 8px; border-radius: 999px; background: var(--surface-strong); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--grad); border-radius: 999px; }
+
+.divider { height: 1px; background: var(--border); border: 0; margin: var(--gap) 0; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 1.4rem; border-radius: 999px;
+  background: var(--accent); color: #fff; font-weight: 600;
+  text-decoration: none; border: 0;
+}
+[data-theme="report"] .btn { color: #fbfaf6; }
+
+/* architecture / flow diagram primitives (solution theme leans on these) */
+.node {
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.1rem;
+  font-weight: 500;
+  text-align: center;
+}
+.node--accent { border-color: var(--accent); color: var(--accent); }
+.arrow { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 1.4rem; }
+
+/* ---------- NAVIGATION UI (driven by deck.js) ---------------------- */
+.deck-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--grad); z-index: 60; transition: width 0.2s var(--ease);
+}
+.deck-counter {
+  position: fixed; bottom: 1.2rem; right: 1.4rem; z-index: 60;
+  font-family: var(--font-mono); font-size: var(--small-size); color: var(--text-muted);
+}
+.deck-dots {
+  position: fixed; top: 50%; right: 1rem; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0.6rem; z-index: 60;
+}
+.deck-dots button {
+  width: 9px; height: 9px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--border-strong); opacity: 0.5; transition: all 0.3s var(--ease);
+}
+.deck-dots button.active { opacity: 1; background: var(--accent); transform: scale(1.3); }
+
+/* ---------- REVEAL ANIMATION (deck.js toggles .in) ----------------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal[data-d="1"] { transition-delay: 0.08s; }
+.reveal[data-d="2"] { transition-delay: 0.16s; }
+.reveal[data-d="3"] { transition-delay: 0.24s; }
+.reveal[data-d="4"] { transition-delay: 0.32s; }
+.reveal[data-d="5"] { transition-delay: 0.40s; }
+
+/* PRODUCT theme: animated color-shifting backdrop */
+[data-theme="product"] body {
+  background:
+    radial-gradient(60vw 60vw at 15% 15%, rgba(124, 58, 237, 0.22), transparent 60%),
+    radial-gradient(50vw 50vw at 85% 30%, rgba(236, 72, 153, 0.18), transparent 60%),
+    radial-gradient(55vw 55vw at 50% 90%, rgba(34, 211, 238, 0.14), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  animation: hueShift 18s ease-in-out infinite alternate;
+}
+@keyframes hueShift { to { filter: hue-rotate(28deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  [data-theme="product"] body { animation: none; }
+}
+
+/* ---------- RESPONSIVE --------------------------------------------- */
+@media (max-width: 820px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .split { grid-template-columns: 1fr; }
+  .deck-dots { display: none; }
+}
+@media (max-width: 520px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ---------- PRINT (export to PDF) ---------------------------------- */
+@media print {
+  html { scroll-snap-type: none; }
+  .slide { min-height: 100vh; page-break-after: always; break-after: page; }
+  .deck-progress, .deck-counter, .deck-dots, .hs-editbar { display: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+</style>
+<style>
+  [data-theme="product"] {
+    --accent: #22d3ee;
+    --accent-2: #a855f7;
+    --accent-3: #10b981;
+    --accent-4: #f59e0b;
+    --grad: linear-gradient(120deg, #22d3ee, #a855f7 48%, #f59e0b);
+  }
+</style>
+</head>
+<body>
+<main class="deck">
+
+<section class="slide slide--center">
+  <div class="slide__inner reveal">
+    <span class="eyebrow">GITHUB 101 · AI ERA</span>
+    <h1 class="title">把 GitHub 变成你的<br><span class="gradient-text">数字作品集</span></h1>
+    <p class="lead mt" style="margin-inline:auto">面向纯文科新手：1 小时理解 GitHub、跑起别人的项目、发布自己的 repo，并用 Copilot 辅助学习和求职。</p>
+    <div class="row mt-lg" style="justify-content:center">
+      <span class="pill">🧑‍💻 No coding background</span>
+      <span class="pill">🤖 AI-assisted workflow</span>
+      <span class="pill">🚀 Portfolio ready</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">OPENING HOOK</span>
+    <h2 class="reveal" data-d="1">在 AI 时代，GitHub 不只是程序员的网盘。</h2>
+    <div class="grid grid-3 mt">
+      <div class="card reveal" data-d="1"><div class="card__num">01</div><h3>作品集</h3><p class="muted">面试官可以看到你做过什么、怎么表达、是否能持续推进。</p></div>
+      <div class="card reveal" data-d="2"><div class="card__num">02</div><h3>协作记录</h3><p class="muted">Issue、PR、commit 像项目履历，能展示真实工作方式。</p></div>
+      <div class="card reveal" data-d="3"><div class="card__num">03</div><h3>AI 工作台</h3><p class="muted">Copilot 帮你读代码、跑项目、补文档，但你要会提问和判断。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--alt">
+  <div class="slide__inner split">
+    <div class="reveal">
+      <span class="eyebrow">MENTAL MODEL</span>
+      <h2>先别怕代码：GitHub 是“项目时间机器 + 公开展柜”。</h2>
+      <p class="lead">Repository 是项目文件夹；commit 是一次存档；branch 是平行宇宙；pull request 是“请大家看看我改得怎么样”。</p>
+      <div class="row mt">
+        <span class="pill">repo = 项目</span>
+        <span class="pill">commit = 存档</span>
+        <span class="pill">PR = 变更申请</span>
+      </div>
+    </div>
+    <div class="reveal" data-d="2" style="aspect-ratio:1;border-radius:var(--radius);background:var(--grad);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(124,58,237,.35)">
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.09) 0 12px,transparent 12px 24px)"></div>
+      <div style="position:absolute;left:10%;right:10%;top:18%;font-family:var(--font-mono);font-size:clamp(.8rem,2vw,1.2rem);line-height:1.8;color:#fff">
+        <div>&gt; git init</div>
+        <div>&gt; git add .</div>
+        <div>&gt; git commit -m "first story"</div>
+        <div>&gt; git push origin main</div>
+        <div class="mt">✅ your idea is online</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">MAP OF GITHUB</span>
+    <h2 class="reveal" data-d="1">新手先掌握这 8 个入口，就够用了。</h2>
+    <div class="grid grid-4 mt">
+      <div class="card reveal" data-d="1"><h3>Profile</h3><p class="muted">你的技术名片：头像、简介、置顶项目。</p></div>
+      <div class="card reveal" data-d="2"><h3>Repository</h3><p class="muted">项目主页：代码、README、历史记录。</p></div>
+      <div class="card reveal" data-d="3"><h3>README</h3><p class="muted">项目说明书：给人类看的第一屏。</p></div>
+      <div class="card reveal" data-d="4"><h3>Issues</h3><p class="muted">需求、bug、待办事项的公开看板。</p></div>
+      <div class="card reveal" data-d="1"><h3>Pull Requests</h3><p class="muted">提交修改、接受 review、合并成果。</p></div>
+      <div class="card reveal" data-d="2"><h3>Actions</h3><p class="muted">自动测试、自动部署、自动检查。</p></div>
+      <div class="card reveal" data-d="3"><h3>Stars / Forks</h3><p class="muted">收藏项目，或复制一份自己改。</p></div>
+      <div class="card reveal" data-d="4"><h3>Pages</h3><p class="muted">把静态网页直接发布成网站。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--alt">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">LOCAL RUNBOOK</span>
+    <h2 class="reveal" data-d="1">把别人 repo 在本地跑起来：像拆盲盒，但有套路。</h2>
+    <div class="grid grid-3 mt">
+      <div class="card reveal" data-d="1"><div class="card__num">STEP 1</div><h3>Clone</h3><p class="muted" style="font-family:var(--font-mono)">git clone &lt;url&gt;<br>cd &lt;repo&gt;</p></div>
+      <div class="card reveal" data-d="2"><div class="card__num">STEP 2</div><h3>Read</h3><p class="muted">先看 README：安装、运行、环境变量、示例截图。</p></div>
+      <div class="card reveal" data-d="3"><div class="card__num">STEP 3</div><h3>Install</h3><p class="muted" style="font-family:var(--font-mono)">npm install<br>pip install -r requirements.txt</p></div>
+      <div class="card reveal" data-d="1"><div class="card__num">STEP 4</div><h3>Configure</h3><p class="muted">复制 .env.example，填入必要配置，别把密钥 push 上去。</p></div>
+      <div class="card reveal" data-d="2"><div class="card__num">STEP 5</div><h3>Run</h3><p class="muted" style="font-family:var(--font-mono)">npm run dev<br>python app.py</p></div>
+      <div class="card reveal" data-d="3"><div class="card__num">STEP 6</div><h3>Debug with AI</h3><p class="muted">把报错、系统环境、已尝试步骤交给 Copilot 解释。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">COMMAND FLOW</span>
+    <h2 class="reveal" data-d="1">最常用 push 流程：保存、检查、提交、上传。</h2>
+    <div class="stack mt-lg">
+      <div class="reveal" data-d="1"><div class="row" style="justify-content:space-between"><span style="font-family:var(--font-mono)">git status</span><span class="muted">看看哪些文件变了</span></div><div class="bar mt"><span style="width:25%"></span></div></div>
+      <div class="reveal" data-d="2"><div class="row" style="justify-content:space-between"><span style="font-family:var(--font-mono)">git add .</span><span class="muted">把修改放进待提交区</span></div><div class="bar mt"><span style="width:50%"></span></div></div>
+      <div class="reveal" data-d="3"><div class="row" style="justify-content:space-between"><span style="font-family:var(--font-mono)">git commit -m "update README"</span><span class="muted">写一条人能看懂的记录</span></div><div class="bar mt"><span style="width:75%"></span></div></div>
+      <div class="reveal" data-d="4"><div class="row" style="justify-content:space-between"><span style="font-family:var(--font-mono)">git push origin main</span><span class="muted">上传到 GitHub</span></div><div class="bar mt"><span style="width:100%"></span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--alt">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">AI PAIRING</span>
+    <h2 class="reveal" data-d="1">VS Code + GitHub Copilot Free：新手的“项目翻译官”。</h2>
+    <div class="grid grid-3 mt">
+      <div class="card reveal" data-d="1"><h3>安装</h3><p class="muted">VS Code 登录 GitHub，安装 GitHub Copilot / Copilot Chat 扩展，选择 Free 个人版。</p></div>
+      <div class="card reveal" data-d="2"><h3>提问</h3><p class="muted">选中报错或文件，问：“请用非程序员语言解释这个项目怎么运行。”</p></div>
+      <div class="card reveal" data-d="3"><h3>执行</h3><p class="muted">让 Copilot 给你命令，但每一步都先看懂：它要装什么、改什么、是否涉及密钥。</p></div>
+    </div>
+    <div class="card reveal mt-lg" data-d="4">
+      <h3>推荐 prompt</h3>
+      <p class="muted" style="font-family:var(--font-mono)">我是纯文科新手，请一步一步带我在本地运行这个 repo。先读 README 和 package 文件，告诉我需要安装什么、运行什么命令、如果报错如何定位。</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">FROM ZERO</span>
+    <h2 class="reveal" data-d="1">从 0 做一个项目：别先追求大，先追求完整闭环。</h2>
+    <div class="grid grid-4 mt">
+      <div class="card reveal" data-d="1"><div class="card__num">01</div><h3>选题</h3><p class="muted">用你的专业优势：书单、展览、城市观察、文本分析、AI 小工具。</p></div>
+      <div class="card reveal" data-d="2"><div class="card__num">02</div><h3>生成骨架</h3><p class="muted">让 Copilot 帮你创建页面、数据文件、README 草稿。</p></div>
+      <div class="card reveal" data-d="3"><div class="card__num">03</div><h3>本地运行</h3><p class="muted">先在自己电脑跑通，再考虑优化和发布。</p></div>
+      <div class="card reveal" data-d="4"><div class="card__num">04</div><h3>发布 repo</h3><p class="muted">新建 GitHub 仓库，push 上去，写清楚项目价值。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--alt">
+  <div class="slide__inner split">
+    <div class="reveal">
+      <span class="eyebrow">README THAT SELLS</span>
+      <h2>求职加分的项目，不是代码最多，而是别人最快看懂。</h2>
+      <p class="lead">README 要回答：这是什么、解决什么问题、怎么运行、有什么截图、你学到了什么、下一步想做什么。</p>
+    </div>
+    <div class="stack">
+      <div class="card reveal" data-d="1"><h3>必须有</h3><p class="muted">一句话简介、功能列表、技术栈、运行命令、截图或 demo。</p></div>
+      <div class="card reveal" data-d="2"><h3>最好有</h3><p class="muted">项目背景、设计思路、AI 如何参与、遇到的坑和解决方式。</p></div>
+      <div class="card reveal" data-d="3"><h3>不要有</h3><p class="muted">空 README、密钥、无法复现的步骤、只有“test project”的说明。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">PROFILE POLISH</span>
+    <h2 class="reveal" data-d="1">发布之后，把 repo pin 到主页，让它成为第一眼证据。</h2>
+    <div class="grid grid-3 mt">
+      <div class="card reveal" data-d="1"><div class="card__num">01</div><h3>完善 Profile</h3><p class="muted">头像、所在地、方向、个人网站/LinkedIn、简短 bio。</p></div>
+      <div class="card reveal" data-d="2"><div class="card__num">02</div><h3>Customize pins</h3><p class="muted">进入个人主页，选择 Customize your pins，固定 3-6 个代表项目。</p></div>
+      <div class="card reveal" data-d="3"><div class="card__num">03</div><h3>排序叙事</h3><p class="muted">把最能体现岗位匹配度、学习能力、表达能力的项目放前面。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--alt">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">JOB HUNT MODE</span>
+    <h2 class="reveal" data-d="1">面试官看 GitHub，通常在找 5 个信号。</h2>
+    <div class="grid grid-3 mt-lg">
+      <div class="metric reveal" data-d="1"><span class="metric__value gradient-text">清晰</span><span class="metric__label">README / demo / screenshots</span></div>
+      <div class="metric reveal" data-d="2"><span class="metric__value gradient-text">持续</span><span class="metric__label">commits / iterations</span></div>
+      <div class="metric reveal" data-d="3"><span class="metric__value gradient-text">真实</span><span class="metric__label">issues / bugs / learnings</span></div>
+    </div>
+    <div class="grid grid-2 mt-lg">
+      <div class="card reveal" data-d="4"><h3>表达力</h3><p class="muted">你能不能把复杂项目讲给非技术同事听懂。</p></div>
+      <div class="card reveal" data-d="5"><h3>AI 素养</h3><p class="muted">你是否会用 AI 提效，同时知道边界、验证结果、保护隐私。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide__inner">
+    <span class="eyebrow reveal">60-MINUTE VIDEO FLOW</span>
+    <h2 class="reveal" data-d="1">视频节奏：概念少讲，演示多做。</h2>
+    <div class="stack mt-lg">
+      <div class="reveal" data-d="1"><div class="row" style="justify-content:space-between"><span>0-10 min：GitHub 是什么 + 主页怎么被看见</span><span class="muted">建立动机</span></div><div class="bar mt"><span style="width:16%"></span></div></div>
+      <div class="reveal" data-d="2"><div class="row" style="justify-content:space-between"><span>10-25 min：repo / README / issue / PR / Actions / Pages</span><span class="muted">功能地图</span></div><div class="bar mt"><span style="width:42%"></span></div></div>
+      <div class="reveal" data-d="3"><div class="row" style="justify-content:space-between"><span>25-40 min：clone、运行、改动、commit、push</span><span class="muted">命令实战</span></div><div class="bar mt"><span style="width:67%"></span></div></div>
+      <div class="reveal" data-d="4"><div class="row" style="justify-content:space-between"><span>40-52 min：VS Code + Copilot 辅助跑项目</span><span class="muted">AI 工作流</span></div><div class="bar mt"><span style="width:87%"></span></div></div>
+      <div class="reveal" data-d="5"><div class="row" style="justify-content:space-between"><span>52-60 min：从 0 发布 repo + pin 到主页 + 行动清单</span><span class="muted">收束转化</span></div><div class="bar mt"><span style="width:100%"></span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--center">
+  <div class="slide__inner reveal">
+    <span class="eyebrow">AFTER CLASS QUEST</span>
+    <h2 class="title">7 天内完成你的<br><span class="gradient-text">第一个公开 repo</span></h2>
+    <div class="grid grid-3 mt-lg" style="text-align:left">
+      <div class="card"><h3>Day 1-2</h3><p class="muted">注册 GitHub、完善 Profile、收藏 5 个与你方向相关的项目。</p></div>
+      <div class="card"><h3>Day 3-4</h3><p class="muted">clone 一个简单项目，用 Copilot 帮你跑起来并记录报错。</p></div>
+      <div class="card"><h3>Day 5-7</h3><p class="muted">做一个小项目，写 README，push 到 GitHub，并 pin 到主页。</p></div>
+    </div>
+    <p class="lead mt-lg" style="margin-inline:auto">目标不是“成为程序员”，而是拥有可验证的 AI 实践能力。</p>
+  </div>
+</section>
+
+
+</main>
+<script>
+/* =====================================================================
+   html-slides — deck.js : navigation + scroll-reveal
+   Self-contained, zero-dependency. Safe to inline in a deck.
+   Builds a progress bar, slide counter and dot-nav from .slide elements,
+   adds keyboard navigation, and reveals [.reveal] blocks on scroll.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  function init() {
+    var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+    if (!slides.length) return;
+
+    /* progress bar */
+    var progress = document.createElement("div");
+    progress.className = "deck-progress";
+    document.body.appendChild(progress);
+
+    /* counter */
+    var counter = document.createElement("div");
+    counter.className = "deck-counter";
+    document.body.appendChild(counter);
+
+    /* dot nav */
+    var dots = document.createElement("nav");
+    dots.className = "deck-dots";
+    dots.setAttribute("aria-label", "Slides");
+    slides.forEach(function (s, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", "Go to slide " + (i + 1));
+      b.addEventListener("click", function () {
+        s.scrollIntoView({ behavior: "smooth" });
+      });
+      dots.appendChild(b);
+    });
+    document.body.appendChild(dots);
+    var dotBtns = Array.prototype.slice.call(dots.children);
+
+    function current() {
+      var idx = 0, best = Infinity;
+      slides.forEach(function (s, i) {
+        var d = Math.abs(s.getBoundingClientRect().top);
+        if (d < best) { best = d; idx = i; }
+      });
+      return idx;
+    }
+
+    function update() {
+      var i = current();
+      counter.textContent = String(i + 1).padStart(2, "0") + " / " + String(slides.length).padStart(2, "0");
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + "%";
+      dotBtns.forEach(function (b, j) { b.classList.toggle("active", j === i); });
+    }
+
+    /* keyboard nav */
+    window.addEventListener("keydown", function (e) {
+      if (e.target.isContentEditable) return;
+      var i = current();
+      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
+        e.preventDefault();
+        if (slides[i + 1]) slides[i + 1].scrollIntoView({ behavior: "smooth" });
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        e.preventDefault();
+        if (slides[i - 1]) slides[i - 1].scrollIntoView({ behavior: "smooth" });
+      } else if (e.key === "Home") {
+        e.preventDefault(); slides[0].scrollIntoView({ behavior: "smooth" });
+      } else if (e.key === "End") {
+        e.preventDefault(); slides[slides.length - 1].scrollIntoView({ behavior: "smooth" });
+      }
+    });
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    /* scroll reveal */
+    var reveals = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.18 });
+      reveals.forEach(function (el) { io.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add("in"); });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+<script>
+/* =====================================================================
+   html-slides — editor.js : in-page editing + save-to-disk
+   Self-contained, zero-dependency. Works together with scripts/serve.py.
+   - Adds a small toolbar (bottom-left).
+   - "Edit" toggles inline editing of text blocks.
+   - "Save" serializes the cleaned page and POSTs it to the local server,
+     which overwrites the source .html file on disk.
+   - Cmd/Ctrl+S also saves.
+   Editable elements: anything with [data-edit], plus common text blocks
+   (.title, h1-h4, p, li, .eyebrow, .lead, .metric__value, .metric__label,
+   .pill, .node, td, th, blockquote, figcaption, .card__num).
+   Add data-noedit to opt an element out.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  var EDITABLE = [
+    "[data-edit]", ".title", "h1", "h2", "h3", "h4", "p", "li",
+    ".eyebrow", ".lead", ".metric__value", ".metric__label",
+    ".pill", ".node", "td", "th", "blockquote", "figcaption", ".card__num"
+  ].join(",");
+
+  var RUNTIME_NODES = ".deck-progress,.deck-counter,.deck-dots,.hs-editbar";
+
+  var editing = false;
+
+  function build() {
+    var bar = document.createElement("div");
+    bar.className = "hs-editbar";
+    bar.innerHTML =
+      '<button data-act="edit" type="button">✏️ Edit</button>' +
+      '<button data-act="save" type="button" disabled>💾 Save</button>' +
+      '<span class="hs-status"></span>';
+    document.body.appendChild(bar);
+
+    var style = document.createElement("style");
+    style.textContent =
+      ".hs-editbar{position:fixed;bottom:1.1rem;left:1.1rem;z-index:80;display:flex;" +
+      "align-items:center;gap:.5rem;padding:.45rem .55rem;border-radius:999px;" +
+      "background:rgba(20,20,30,.82);backdrop-filter:blur(8px);" +
+      "box-shadow:0 6px 24px rgba(0,0,0,.28);font:500 13px/1 system-ui,sans-serif}" +
+      ".hs-editbar button{cursor:pointer;border:0;border-radius:999px;padding:.5rem .85rem;" +
+      "font:inherit;color:#fff;background:rgba(255,255,255,.12)}" +
+      ".hs-editbar button[disabled]{opacity:.45;cursor:not-allowed}" +
+      ".hs-editbar button.on{background:#7c3aed}" +
+      ".hs-status{color:#cfcce6;padding-right:.4rem;min-width:1px}" +
+      "[data-hs-edit] [contenteditable]{outline:1px dashed rgba(124,58,237,.6);" +
+      "outline-offset:3px;border-radius:3px}" +
+      "[data-hs-edit] [contenteditable]:focus{outline:2px solid #7c3aed}";
+    document.head.appendChild(style);
+
+    bar.querySelector('[data-act="edit"]').addEventListener("click", toggleEdit);
+    bar.querySelector('[data-act="save"]').addEventListener("click", save);
+    return bar;
+  }
+
+  function setStatus(msg, ms) {
+    var el = document.querySelector(".hs-status");
+    if (!el) return;
+    el.textContent = msg || "";
+    if (ms) setTimeout(function () { if (el.textContent === msg) el.textContent = ""; }, ms);
+  }
+
+  function toggleEdit() {
+    editing = !editing;
+    var editBtn = document.querySelector('.hs-editbar [data-act="edit"]');
+    var saveBtn = document.querySelector('.hs-editbar [data-act="save"]');
+    document.documentElement.toggleAttribute("data-hs-edit", editing);
+    editBtn.classList.toggle("on", editing);
+    editBtn.textContent = editing ? "✏️ Editing" : "✏️ Edit";
+    saveBtn.disabled = !editing;
+
+    var nodes = document.querySelectorAll(EDITABLE);
+    nodes.forEach(function (n) {
+      if (n.closest("[data-noedit]") || n.closest(".hs-editbar")) return;
+      if (editing) n.setAttribute("contenteditable", "true");
+      else n.removeAttribute("contenteditable");
+    });
+    setStatus(editing ? "Editing — click text to change it" : "", editing ? 4000 : 0);
+  }
+
+  function serialize() {
+    var clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll(RUNTIME_NODES).forEach(function (n) { n.remove(); });
+    clone.querySelectorAll("style").forEach(function (n) {
+      if (n.textContent.indexOf(".hs-editbar{position:fixed") !== -1) n.remove();
+    });
+    clone.querySelectorAll("[contenteditable]").forEach(function (n) { n.removeAttribute("contenteditable"); });
+    clone.querySelectorAll(".reveal.in").forEach(function (n) { n.classList.remove("in"); });
+    clone.removeAttribute("data-hs-edit");
+    return "<!DOCTYPE html>\n" + clone.outerHTML + "\n";
+  }
+
+  function save() {
+    setStatus("Saving…");
+    var body = JSON.stringify({ path: location.pathname, html: serialize() });
+    fetch("/__save__", { method: "POST", headers: { "Content-Type": "application/json" }, body: body })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (res.ok && res.j && res.j.ok) setStatus("Saved ✓ " + (res.j.path || ""), 3500);
+        else setStatus("Save failed: " + ((res.j && res.j.error) || "unknown"), 6000);
+      })
+      .catch(function () {
+        setStatus("No save server. Run: python serve.py <file>", 6000);
+      });
+  }
+
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      if (editing) save();
+    }
+  });
+
+  function init() {
+    build();
+    if (new URLSearchParams(location.search).has("edit")) toggleEdit();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+
+
+</body></html>
